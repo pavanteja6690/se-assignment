@@ -1,13 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactSelect from "react-select";
+import { useParams } from "react-router-dom";
+import {
+  getPlanProcedureUsers,
+  addUserToProcedure,
+}from "../../../api/api"
 
 const PlanProcedureItem = ({ procedure, users }) => {
+    let { id } = useParams();
     const [selectedUsers, setSelectedUsers] = useState(null);
 
-    const handleAssignUserToProcedure = (e) => {
+    useEffect(() => {
+      (async () => {
+        var getselectedUsers = await getPlanProcedureUsers(id, procedure.procedureId);
+        console.log(getselectedUsers);
+        const initialSelectedUsers = getselectedUsers.map((user) => ({
+          label: user.user.name,
+          value: user.user.userId,
+          }));
+        console.log(initialSelectedUsers);
+        setSelectedUsers(initialSelectedUsers);
+      })();
+    }, [procedure]);
+
+
+
+    const handleAssignUserToProcedure = async (e) => {
         setSelectedUsers(e);
-        // TODO: Remove console.log and add missing logic
-        console.log(e);
+        await addUserToProcedure(id, procedure.procedureId, e[e.length - 1].value);
     };
 
     return (

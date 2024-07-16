@@ -8,4 +8,11 @@ namespace RL.Backend.Commands
         public int PlanId { get; set; }
         public int ProcedureId { get; set; }
     }
+
+    public class AddUserToPlacProcedureCommand : IRequest<ApiResponse<Unit>>
+    {
+        public int PlanId { get; set; }
+        public int ProcedureId { get; set; }
+        public int UserId { get; set; }
+    }
 }
