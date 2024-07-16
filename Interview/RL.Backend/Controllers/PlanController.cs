@@ -48,7 +48,7 @@ public class PlanController : ControllerBase
     }
 
     [HttpPost("AddUserToProcedure")]
-    public async Task<IActionResult> AddUserToProcedure(AddUserToPlacProcedureCommand command, CancellationToken token)
+    public async Task<IActionResult> AddUserToProcedure(AddUserToProcedureCommand command, CancellationToken token)
     {
         var response = await _mediator.Send(command, token);
 

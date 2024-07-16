@@ -7,7 +7,7 @@ using RL.Data.DataModels;
 
 namespace RL.Backend.Commands.Handlers.Plans;
 
-public class AddUserToProcedureCommandHandler : IRequestHandler<AddUserToPlacProcedureCommand, ApiResponse<Unit>>
+public class AddUserToProcedureCommandHandler : IRequestHandler<AddUserToProcedureCommand, ApiResponse<Unit>>
 {
     private readonly RLContext _context;
 
@@ -16,7 +16,7 @@ public class AddUserToProcedureCommandHandler : IRequestHandler<AddUserToPlacPro
         _context = context;
     }
 
-    public async Task<ApiResponse<Unit>> Handle(AddUserToPlacProcedureCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResponse<Unit>> Handle(AddUserToProcedureCommand request, CancellationToken cancellationToken)
     {
         try
         {
