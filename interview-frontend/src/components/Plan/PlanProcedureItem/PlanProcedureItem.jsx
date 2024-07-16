@@ -13,7 +13,6 @@ const PlanProcedureItem = ({ procedure, users }) => {
     useEffect(() => {
       (async () => {
         var getselectedUsers = await getPlanProcedureUsers(id, procedure.procedureId);
-        console.log(getselectedUsers);
         const initialSelectedUsers = getselectedUsers.map((user) => ({
           label: user.user.name,
           value: user.user.userId,
