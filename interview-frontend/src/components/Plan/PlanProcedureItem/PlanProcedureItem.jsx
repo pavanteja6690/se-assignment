@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import {
   getPlanProcedureUsers,
   addUserToProcedure,
+  removeUserFromProcedure,
 }from "../../../api/api"
 
 const PlanProcedureItem = ({ procedure, users }) => {
@@ -12,21 +13,41 @@ const PlanProcedureItem = ({ procedure, users }) => {
 
     useEffect(() => {
       (async () => {
-        var getselectedUsers = await getPlanProcedureUsers(id, procedure.procedureId);
-        const initialSelectedUsers = getselectedUsers.map((user) => ({
-          label: user.user.name,
-          value: user.user.userId,
+          var getselectedUsers = await getPlanProcedureUsers(id, procedure.procedureId);
+          const initialSelectedUsers = getselectedUsers.map((user) => ({
+              label: user.user.name,
+              value: user.user.userId,
           }));
-        console.log(initialSelectedUsers);
-        setSelectedUsers(initialSelectedUsers);
+          setSelectedUsers(initialSelectedUsers);
       })();
-    }, [procedure]);
+    }, [procedure, id]);
 
 
+    const handleAssignUserToProcedure = async (selectedOptions) => {
+      const newUser = selectedOptions.find(option => !selectedUsers.includes(option));
+      if (newUser) {
+          await addUserToProcedure(id, procedure.procedureId, newUser.value);
+      }
+      setSelectedUsers(selectedOptions);
+    };
 
-    const handleAssignUserToProcedure = async (e) => {
-        setSelectedUsers(e);
-        await addUserToProcedure(id, procedure.procedureId, e[e.length - 1].value);
+    const handleRemoveUserFromProcedure = async (selectedOptions) => {
+        const removedUser = selectedUsers.find(option => !selectedOptions.includes(option));
+        if (removedUser) {
+            const removedUsers = selectedUsers.filter(user => !selectedOptions.includes(user));
+            var clearAll = removedUsers.length == selectedUsers.length;
+            await removeUserFromProcedure(id, procedure.procedureId, removedUser.value, clearAll);
+        }
+        
+        setSelectedUsers(selectedOptions);
+    };
+
+    const handleChange = async (selectedOptions) => {
+        if (selectedOptions.length < selectedUsers.length) {
+            await handleRemoveUserFromProcedure(selectedOptions);
+        } else {
+            await handleAssignUserToProcedure(selectedOptions);
+        }
     };
 
     return (
@@ -41,7 +62,7 @@ const PlanProcedureItem = ({ procedure, users }) => {
                 isMulti={true}
                 options={users}
                 value={selectedUsers}
-                onChange={(e) => handleAssignUserToProcedure(e)}
+                onChange={(e) => handleChange(e)}
             />
         </div>
     );

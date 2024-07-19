@@ -15,4 +15,11 @@ namespace RL.Backend.Commands
         public int ProcedureId { get; set; }
         public int UserId { get; set; }
     }
+    public class RemoveUserFromProcedureCommand : IRequest<ApiResponse<Unit>>
+    {
+        public int PlanId { get; set; }
+        public int ProcedureId { get; set; }
+        public int UserId { get; set; }
+        public bool ClearAll {get;set;} = false;
+    }
 }
