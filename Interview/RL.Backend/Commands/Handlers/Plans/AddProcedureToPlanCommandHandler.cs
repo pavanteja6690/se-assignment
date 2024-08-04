@@ -27,16 +27,16 @@ public class AddProcedureToPlanCommandHandler : IRequestHandler<AddProcedureToPl
                 return ApiResponse<Unit>.Fail(new BadRequestException("Invalid ProcedureId"));
 
             var plan = await _context.Plans
-                .Include(p => p.PlanProcedures)
-                .FirstOrDefaultAsync(p => p.PlanId == request.PlanId);
-            var procedure = await _context.Procedures.FirstOrDefaultAsync(p => p.ProcedureId == request.ProcedureId);
+                            .Include(p => p.PlanProcedures)
+                            .FirstOrDefaultAsync(p => p.PlanId == request.PlanId,cancellationToken);
+            var procedure = await _context.Procedures.
+                                    FirstOrDefaultAsync(p => p.ProcedureId == request.ProcedureId,cancellationToken);
 
             if (plan is null)
                 return ApiResponse<Unit>.Fail(new NotFoundException($"PlanId: {request.PlanId} not found"));
             if (procedure is null)
                 return ApiResponse<Unit>.Fail(new NotFoundException($"ProcedureId: {request.ProcedureId} not found"));
 
-            //Already has the procedure, so just succeed
             if (plan.PlanProcedures.Any(p => p.ProcedureId == procedure.ProcedureId))
                 return ApiResponse<Unit>.Succeed(new Unit());
 
@@ -45,7 +45,7 @@ public class AddProcedureToPlanCommandHandler : IRequestHandler<AddProcedureToPl
                 ProcedureId = procedure.ProcedureId
             });
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
 
             return ApiResponse<Unit>.Succeed(new Unit());
         }

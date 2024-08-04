@@ -65,3 +65,60 @@ export const getUsers = async () => {
 
     return await response.json();
 };
+export const removeUserFromProcedure = async (procedureId,planId, userId) => {
+    try {
+        const url = `${api_url}/PlanProcedure/RemoveUsers`;
+        var command = { procedureId,planId, userId };
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(command),
+        });
+        return response.json();
+    } catch (error) {
+        console.error('Error adding users to procedure:', error);
+        throw new Error("Failed to Add users to procedure");
+
+    }
+};
+
+export const getAssignedUsersProcedurePlans = async (procedureId,planId) => {
+    try {
+        const url = `${api_url}/PlanProcedure/GetAssignedUsers/${procedureId}/${planId}`;
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },});
+
+            if (response.ok && response.status==200) return await response.json();
+        return false;
+    } catch (error) {
+        console.error('Error getting users from procedure:', error);
+        throw error;
+    }
+};
+
+export const assignUsersToPlanProcedure = async (procedureId,planId, userId) => {
+    try {
+        const url = `${api_url}/PlanProcedure/AssignUsers`;
+        var command = { procedureId,planId, userId };
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(command),
+        });
+        return response.json();
+    } catch (error) {
+        console.error('Error adding users to procedure:', error);
+        throw new Error("Failed to Add users to procedure");
+
+    }
+};
